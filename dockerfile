@@ -9,6 +9,6 @@ COPY . .
 
 RUN GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -ldflags="-s -w" -installsuffix cgo -o app .
 
-EXPOSE 3000
+EXPOSE 3333
 
 CMD ["./app"]
