@@ -42,11 +42,11 @@ func init() {
 		panic("error from new settings ")
 	}
 
-	err = settings.ReadToStruct("Mysql", &Pgsql_config)
-	utils.DebugF("mysql config: %+v", Pgsql_config)
+	err = settings.ReadToStruct("Pgsql", &Pgsql_config)
+	utils.DebugF("pgsql config: %+v", Pgsql_config)
 	if err != nil {
-		utils.ErrorF("set mysql config error: %s", err)
-		panic("set mysql error")
+		utils.ErrorF("set ogsql config error: %s", err)
+		panic("set pgsql error")
 	}
 
 	err = settings.ReadToStruct("Redis", &Redis_config)

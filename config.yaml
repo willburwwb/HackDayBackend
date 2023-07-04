@@ -1,11 +1,11 @@
 Server:
   run_mode: "debug"
-  address: "127.0.0.1:3000"
+  addr: "127.0.0.1:3000"
   read_timeout: 10
   write_timeout: 10
 
 
-Postgresql:
+Pgsql:
   host: "postgresql"
   port: 5432
   user: "postgre"
