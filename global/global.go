@@ -8,8 +8,9 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 var (
@@ -27,7 +28,7 @@ func Set() error {
 	}
 
 	time.Sleep(1 * time.Second)
-	Db, err = setupPgsql()
+	Db, err = SetMysql()
 	if err != nil {
 		utils.ErrorF("set pgsql error: %s", err)
 		return err
@@ -36,24 +37,30 @@ func Set() error {
 	return nil
 }
 
-func setupPgsql() (db *gorm.DB, err error) {
-	dsn := fmt.Sprintf("host=%s user=%s dbname=%s port=%s password=%s sslmode=disable TimeZone=Asia/Shanghai ",
-		configs.Pgsql_config.Host, configs.Pgsql_config.User, configs.Pgsql_config.Dbname, configs.Pgsql_config.Port, configs.Pgsql_config.Password)
-	//if configs.Config.Pgsql.Password != "" {
-	//	dsn = dsn + fmt.Sprintf("password=%s", configs.Config.Pgsql.Password)
-	//}
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+func SetMysql() (*gorm.DB, error) {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?readTimeout=1500ms&writeTimeout=1500ms&charset=utf8&loc=Local&&parseTime=true",
+		configs.Mysql_config.User, configs.Mysql_config.Password, configs.Mysql_config.Ip, configs.Mysql_config.Port, configs.Mysql_config.Name)
+
+	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true, // use singular table name, table for `User` would be `user` with this option enabled
+		},
+		SkipDefaultTransaction: true, // 跳过默认事务, 加快数据库操作速度, 注意写入数据的时候需要手动开启事务
+	})
 	if err != nil {
-		return
+		return nil, err
 	}
-	sqlDB, err := db.DB()
+
+	sqlDB, err := database.DB()
 	if err != nil {
-		return
+		return nil, err
 	}
-	sqlDB.SetMaxIdleConns(configs.Pgsql_config.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(configs.Pgsql_config.MaxOpenConns)
-	sqlDB.SetConnMaxLifetime(time.Duration(configs.Pgsql_config.MaxLifeSeconds) * time.Second)
-	return
+
+	sqlDB.SetMaxIdleConns(configs.Mysql_config.MaxIdleConns)
+	sqlDB.SetConnMaxLifetime(time.Duration(configs.Mysql_config.MaxLifeSeconds) * time.Hour)
+	sqlDB.SetMaxOpenConns(configs.Mysql_config.MaxOpenConns)
+
+	return database, nil
 }
 
 func setupRedis() (*redis.Client, error) {

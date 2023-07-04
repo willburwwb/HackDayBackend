@@ -5,11 +5,11 @@ Server:
   write_timeout: 10
 
 
-Pgsql:
-  host: "postgresql"
-  port: 5432
-  user: "postgre"
-  password: "123"
+Mysql:
+  host: "hackdaybackend-mysql-1"
+  port: 3306
+  user: "root"
+  password: "123456"
   name: "hackday_backend"
   max_idle_conns: 100
   max_open_conns: 100
@@ -17,7 +17,7 @@ Pgsql:
 
 
 Redis:
-  addr: "127.0.0.1:6379"
+  addr: "hackdaybackend-redis-1:6379"
   password:
   db:
 

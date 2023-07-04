@@ -6,6 +6,7 @@ require gorm.io/driver/postgres v1.5.2
 
 require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.62.414 // indirect
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
 	github.com/opentracing/opentracing-go v1.2.1-0.20220228012449-10b1cf09e00b // indirect
 )
@@ -99,5 +100,6 @@ require (
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.2 // indirect
 )

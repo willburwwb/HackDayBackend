@@ -14,15 +14,14 @@ services:
       - mynet
     #volumes:
     #  - ./app:/app   将本地app目录挂载到容器的/app目录
-  postgresql:
-    image: postgres:latest
-    restart: always
-    ports:
-      - 5432:5432
+  mysql:
+    image: mysql:latest
     environment:
-      POSTGRES_USER: postgre
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: hackday_backend
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=hackday_backend
+    ports:
+      - "3306:3306"
+      - "33060:33060"
     networks:
       - mynet
   redis:

@@ -12,10 +12,10 @@ type ServerConfigs struct {
 	WriteTimeout time.Duration `mapstructure:"write_timeout" json:"write_timeout" yaml:"write_timeout"`
 }
 
-type PgsqlConfigs struct {
-	Host           string `mapstructure:"host" json:"host" yaml:"host"`                                      // 服务器地址
-	Port           string `mapstructure:"port" json:"port" yaml:"port"`                                      // 端口
-	Dbname         string `mapstructure:"dbname" json:"dbname" yaml:"dbname"`                                // 数据库名
+type MysqlConfigs struct {
+	Ip             string `mapstructure:"ip" json:"ip" yaml:"ip"`                                            // 服务器地址
+	Port           int    `mapstructure:"port" json:"port" yaml:"port"`                                      // 端口
+	Name           string `mapstructure:"name" json:"name" yaml:"name"`                                      // 数据库名
 	User           string `mapstructure:"user" json:"user" yaml:"user"`                                      // 用户名
 	Password       string `mapstructure:"password" json:"password" yaml:"password"`                          // 密码
 	MaxIdleConns   int    `mapstructure:"max_idle_conns" json:"max_idle_conns" yaml:"max_idle_conns"`        // 空闲中的最大连接数
@@ -30,7 +30,7 @@ type RedisConfigs struct {
 }
 
 var (
-	Pgsql_config  *PgsqlConfigs
+	Mysql_config  *MysqlConfigs
 	Redis_config  *RedisConfigs
 	Server_config *ServerConfigs
 )
@@ -42,11 +42,11 @@ func init() {
 		panic("error from new settings ")
 	}
 
-	err = settings.ReadToStruct("Pgsql", &Pgsql_config)
-	utils.DebugF("pgsql config: %+v", Pgsql_config)
+	err = settings.ReadToStruct("Mysql", &Mysql_config)
+	utils.DebugF("mysql config: %+v", Mysql_config)
 	if err != nil {
-		utils.ErrorF("set ogsql config error: %s", err)
-		panic("set pgsql error")
+		utils.ErrorF("set mysql config error: %s", err)
+		panic("set mysql error")
 	}
 
 	err = settings.ReadToStruct("Redis", &Redis_config)
