@@ -19,14 +19,16 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=
       - MYSQL_DATABASE=hackday_backend
+    container_name: "db_mysql"
     ports:
-      - "3366:3306" # Avoid conflicts with local ports
+      - "3306:3306" # Avoid conflicts with local ports
     volumes:
       - "~/data:/var/lib/mysql"
     networks:
       - mynet
   redis:
     image: redis:latest
+    container_name: "db_redis"
     ports:
       - "6379:6379"
     networks:
