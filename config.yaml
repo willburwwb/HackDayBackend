@@ -1,0 +1,24 @@
+Server:
+  run_mode: "debug"
+  address: "127.0.0.1:3000"
+  read_timeout: 10
+  write_timeout: 10
+
+
+Postgresql:
+  host: "postgresql"
+  port: 5432
+  user: "postgre"
+  password: "123"
+  name: "hackday_backend"
+  max_idle_conns: 100
+  max_open_conns: 100
+  max_life_seconds: 24000
+
+
+Redis:
+  addr: "127.0.0.1:6379"
+  password:
+  db:
+
+
