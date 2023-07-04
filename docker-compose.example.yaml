@@ -13,15 +13,16 @@ services:
     networks:
       - mynet
     #volumes:
-    #  - ./app:/app   将本地app目录挂载到容器的/app目录
+    #  - ./app:/app  
   mysql:
     image: mysql:latest
     environment:
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=
       - MYSQL_DATABASE=hackday_backend
     ports:
-      - "3306:3306"
-      - "33060:33060"
+      - "3366:3306" # Avoid conflicts with local ports
+    volumes:
+      - "~/data:/var/lib/mysql"
     networks:
       - mynet
   redis:
@@ -31,7 +32,7 @@ services:
     networks:
       - mynet
     #volumes:
-    #  - ./redis_data:/data  # 将本地redis_data目录挂载到容器的/data目录
+    #  - ./redis_data:/data  
 
 networks:
   mynet:

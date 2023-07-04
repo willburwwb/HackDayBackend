@@ -7,9 +7,9 @@ Server:
 
 Mysql:
   host: "hackdaybackend-mysql-1"
-  port: 3306
-  user: "root"
-  password: "123456"
+  port: 3366
+  user: 
+  password: 
   name: "hackday_backend"
   max_idle_conns: 100
   max_open_conns: 100
