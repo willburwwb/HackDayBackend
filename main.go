@@ -3,6 +3,7 @@ package main
 import (
 	"HackDayBackend/configs"
 	"HackDayBackend/global"
+	"HackDayBackend/internal/model"
 	"HackDayBackend/internal/router"
 	"HackDayBackend/utils"
 	"net/http"
@@ -15,6 +16,8 @@ func main() {
 	if err := global.Set(); err != nil {
 		panic(err)
 	}
+
+	model.SetModel()
 
 	r := router.NewRouter()
 	gin.SetMode(configs.Server_config.RunMode)

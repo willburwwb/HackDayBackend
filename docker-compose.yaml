@@ -1,0 +1,38 @@
+version: '3'
+services:
+  
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - mynet
+    #volumes:
+    #  - ./app:/app   将本地app目录挂载到容器的/app目录
+  postgresql:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgre
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: hackday_backend
+    networks:
+      - mynet
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - mynet
+    #volumes:
+    #  - ./redis_data:/data  # 将本地redis_data目录挂载到容器的/data目录
+
+networks:
+  mynet:
