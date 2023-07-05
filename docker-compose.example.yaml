@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3333:3333"
+    environment: #千万不能传到public仓库中
+      - OPENAI_TOKEN=
     depends_on:
       - mysql
       - redis

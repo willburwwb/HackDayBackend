@@ -22,7 +22,7 @@ func NewRouter() *gin.Engine {
 	})
 
 	r.Use(middleware.CorsMiddleware)
-	//r.Use(middlewares.AuthMiddleware)
+	//r.Use(middleware.AuthMiddleware)
 
 	userGroup := r.Group("/user")
 	{

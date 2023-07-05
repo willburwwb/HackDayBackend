@@ -1,4 +1,4 @@
-FROM golang:alpine AS builder
+FROM golang:1.20.3 AS builder
 ENV GO111MODULE=on
 ENV GOPROXY=http://goproxy.cn,direct
 WORKDIR /app

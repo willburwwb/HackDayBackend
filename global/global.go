@@ -14,8 +14,9 @@ import (
 )
 
 var (
-	Db  *gorm.DB
-	Rdb *redis.Client
+	Db      *gorm.DB
+	Rdb     *redis.Client
+	NodeSum uint
 )
 
 func Set() error {
