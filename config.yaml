@@ -1,23 +1,33 @@
 Server:
   run_mode: "debug"
-  addr: "127.0.0.1:3000"
+  addr: ":3333"
   read_timeout: 10
   write_timeout: 10
 
 
 Mysql:
-  host: "hackdaybackend-mysql-1"
-  port: 3306
-  user: "root"
-  password: "123456"
+  host: "db_mysql"
+  ip: "db_mysql"
+  port: 3366
+  user: root
+  password: 123456
   name: "hackday_backend"
   max_idle_conns: 100
   max_open_conns: 100
   max_life_seconds: 24000
 
+Pgsql:
+  host: "db_postgres"
+  port: 5432
+  dbname: "hackday_backend"
+  user: "postgres"
+  password: ""
+  max_idle_conns: 1 #minute
+  max_open_conns: 1 #minute
+  max_life_seconds: 86400
 
 Redis:
-  addr: "hackdaybackend-redis-1:6379"
+  addr: "db_redis:6379"
   password:
   db:
 

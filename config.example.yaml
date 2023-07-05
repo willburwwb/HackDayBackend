@@ -1,0 +1,24 @@
+Server:
+  run_mode: "debug"
+  addr: "127.0.0.1:3333"
+  read_timeout: 10
+  write_timeout: 10
+
+
+Mysql:
+  host: "hackdaybackend-mysql-1"
+  port: 3306
+  user: 
+  password: 
+  name: "hackday_backend"
+  max_idle_conns: 100
+  max_open_conns: 100
+  max_life_seconds: 24000
+
+
+Redis:
+  addr: "hackdaybackend-redis-1:6379"
+  password:
+  db:
+
+

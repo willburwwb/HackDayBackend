@@ -5,12 +5,12 @@ import (
 	"HackDayBackend/utils"
 	"context"
 	"fmt"
+	"gorm.io/driver/postgres"
+	"log"
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
 )
 
 var (
@@ -26,41 +26,61 @@ func Set() error {
 		utils.ErrorF("set redis error: %s", err)
 		return err
 	}
-
 	time.Sleep(1 * time.Second)
-	Db, err = SetMysql()
+	//Db, err = SetMysql()
+	//if err != nil {
+	//	utils.ErrorF("set pgsql error: %s", err)
+	//	return err
+	//}
+	Db, err = setupPgsql()
 	if err != nil {
 		utils.ErrorF("set pgsql error: %s", err)
 		return err
 	}
-
 	return nil
 }
 
-func SetMysql() (*gorm.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?readTimeout=1500ms&writeTimeout=1500ms&charset=utf8&loc=Local&&parseTime=true",
-		configs.Mysql_config.User, configs.Mysql_config.Password, configs.Mysql_config.Ip, configs.Mysql_config.Port, configs.Mysql_config.Name)
-
-	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true, // use singular table name, table for `User` would be `user` with this option enabled
-		},
-		SkipDefaultTransaction: true, // 跳过默认事务, 加快数据库操作速度, 注意写入数据的时候需要手动开启事务
-	})
+//	func SetMysql() (*gorm.DB, error) {
+//		dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+//			configs.Mysql_config.User, configs.Mysql_config.Password, configs.Mysql_config.Ip, configs.Mysql_config.Name)
+//		fmt.Println("dns", dsn)
+//		database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+//		if err != nil {
+//			return nil, err
+//		}
+//
+//		sqlDB, err := database.DB()
+//		if err != nil {
+//			return nil, err
+//		}
+//
+//		sqlDB.SetMaxIdleConns(configs.Mysql_config.MaxIdleConns)
+//		sqlDB.SetConnMaxLifetime(time.Duration(configs.Mysql_config.MaxLifeSeconds) * time.Hour)
+//		sqlDB.SetMaxOpenConns(configs.Mysql_config.MaxOpenConns)
+//
+//		return database, nil
+//	}
+func setupPgsql() (*gorm.DB, error) {
+	var err error
+	dsn := fmt.Sprintf("host=%s user=%s dbname=%s port=%s password=%s sslmode=disable ",
+		configs.Pgsql_config.Host, configs.Pgsql_config.User, configs.Pgsql_config.Dbname, configs.Pgsql_config.Port, configs.Pgsql_config.Password)
+	//if configs.Config.Pgsql.Password != "" {
+	//	dsn = dsn + fmt.Sprintf("password=%s", configs.Config.Pgsql.Password)
+	//}
+	log.Println(dsn)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		panic(fmt.Sprintf("connect to db error, %v", err))
 	}
-
-	sqlDB, err := database.DB()
+	sqlDB, err := db.DB()
 	if err != nil {
-		return nil, err
+		panic(fmt.Sprintf("get db error, %v", err))
 	}
+	sqlDB.SetMaxIdleConns(configs.Pgsql_config.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(configs.Pgsql_config.MaxOpenConns)
+	sqlDB.SetConnMaxLifetime(time.Duration(configs.Pgsql_config.MaxLifeSeconds) * time.Second)
 
-	sqlDB.SetMaxIdleConns(configs.Mysql_config.MaxIdleConns)
-	sqlDB.SetConnMaxLifetime(time.Duration(configs.Mysql_config.MaxLifeSeconds) * time.Hour)
-	sqlDB.SetMaxOpenConns(configs.Mysql_config.MaxOpenConns)
-
-	return database, nil
+	return db, nil
 }
 
 func setupRedis() (*redis.Client, error) {

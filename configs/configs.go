@@ -22,6 +22,16 @@ type MysqlConfigs struct {
 	MaxOpenConns   int    `mapstructure:"max_open_conns" json:"max_open_conns" yaml:"max_open_conns"`        // 打开到数据库的最大连接数
 	MaxLifeSeconds int64  `mapstructure:"max_life_seconds" json:"max_life_seconds" yaml:"max_life_seconds" ` // 数据库连接最长生命周期
 }
+type PgsqlConfigs struct {
+	Host           string `mapstructure:"host" json:"host" yaml:"host"`                                      // 服务器地址
+	Port           string `mapstructure:"port" json:"port" yaml:"port"`                                      // 端口
+	Dbname         string `mapstructure:"dbname" json:"dbname" yaml:"dbname"`                                // 数据库名
+	User           string `mapstructure:"user" json:"user" yaml:"user"`                                      // 数据库用户名
+	Password       string `mapstructure:"password" json:"password" yaml:"password"`                          // 数据库密码
+	MaxIdleConns   int    `mapstructure:"max_idle_conns" json:"max_idle_conns" yaml:"max_idle_conns"`        // 空闲中的最大连接数
+	MaxOpenConns   int    `mapstructure:"max_open_conns" json:"max_open_conns" yaml:"max_open_conns"`        // 打开到数据库的最大连接数
+	MaxLifeSeconds int64  `mapstructure:"max_life_seconds" json:"max_life_seconds" yaml:"max_life_seconds" ` // 数据库连接最长生命周期
+}
 
 type RedisConfigs struct {
 	Addr     string `mapstructure:"addr" json:"addr" yaml:"addr"`
@@ -30,9 +40,10 @@ type RedisConfigs struct {
 }
 
 var (
-	Mysql_config  *MysqlConfigs
+	//Mysql_config  *MysqlConfigs
 	Redis_config  *RedisConfigs
 	Server_config *ServerConfigs
+	Pgsql_config  *PgsqlConfigs
 )
 
 func init() {
@@ -42,11 +53,17 @@ func init() {
 		panic("error from new settings ")
 	}
 
-	err = settings.ReadToStruct("Mysql", &Mysql_config)
-	utils.DebugF("mysql config: %+v", Mysql_config)
+	//err = settings.ReadToStruct("Mysql", &Mysql_config)
+	//utils.DebugF("mysql config: %+v", Mysql_config)
+	//if err != nil {
+	//	utils.ErrorF("set mysql config error: %s", err)
+	//	panic("set mysql error")
+	//}
+	err = settings.ReadToStruct("Pgsql", &Pgsql_config)
+	utils.DebugF("Pgsql config: %+v", Pgsql_config)
 	if err != nil {
-		utils.ErrorF("set mysql config error: %s", err)
-		panic("set mysql error")
+		utils.ErrorF("set Pgsql config error: %s", err)
+		panic("set Pgsql error")
 	}
 
 	err = settings.ReadToStruct("Redis", &Redis_config)
