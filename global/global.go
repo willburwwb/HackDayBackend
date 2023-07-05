@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"gorm.io/driver/postgres"
+	"log"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -61,12 +62,12 @@ func Set() error {
 //	}
 func setupPgsql() (*gorm.DB, error) {
 	var err error
-	dsn := fmt.Sprintf("host=%s user=%s dbname=%s port=%s password=%s sslmode=disable TimeZone=Asia/Shanghai ",
+	dsn := fmt.Sprintf("host=%s user=%s dbname=%s port=%s password=%s sslmode=disable ",
 		configs.Pgsql_config.Host, configs.Pgsql_config.User, configs.Pgsql_config.Dbname, configs.Pgsql_config.Port, configs.Pgsql_config.Password)
 	//if configs.Config.Pgsql.Password != "" {
 	//	dsn = dsn + fmt.Sprintf("password=%s", configs.Config.Pgsql.Password)
 	//}
-	fmt.Println(dsn)
+	log.Println(dsn)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(fmt.Sprintf("connect to db error, %v", err))
