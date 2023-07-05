@@ -39,3 +39,15 @@ func AuthJWT() gin.HandlerFunc { //中间件
 
 	}
 }
+
+// CorsMiddleware :Fix cors problem
+func CorsMiddleware(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	c.Writer.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
+	if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(http.StatusNoContent)
+		return
+	}
+	c.Next()
+}

@@ -9,6 +9,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
 	github.com/opentracing/opentracing-go v1.2.1-0.20220228012449-10b1cf09e00b // indirect
+	github.com/sashabaranov/go-openai v1.12.0 // indirect
 )
 
 require (
