@@ -4,6 +4,7 @@ import (
 	"HackDayBackend/internal/handler/node"
 	"HackDayBackend/internal/handler/user"
 	"HackDayBackend/internal/middleware"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +13,14 @@ func NewRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+
+	ping := r.Group("/ping")
+	ping.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"msg": "this is hackday",
+		})
+	})
+
 	r.Use(middleware.CorsMiddleware)
 	//r.Use(middlewares.AuthMiddleware)
 

@@ -27,3 +27,5 @@ main
 app
 
 # ignore files storing important data
+config.yaml
+docker-compose.yaml
