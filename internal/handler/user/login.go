@@ -12,9 +12,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var db = global.Db
-var rdb = global.Rdb
-
 func GetCode(c *gin.Context) {
 	var pcode model.PhoneCode
 	if err := c.ShouldBind(&pcode); err != nil {
@@ -26,7 +23,7 @@ func GetCode(c *gin.Context) {
 	// get code
 	code := verify.CreateVerifyCode()
 
-	err := rdb.Set(context.Background(), pcode.Phone, code, 3*time.Minute).Err()
+	err := global.Rdb.Set(context.Background(), pcode.Phone, code, 3*time.Minute).Err()
 	if err != nil {
 		utils.ErrorF("store phone code error: %s", err)
 		utils.Failed(c, 400, "try again", nil)
@@ -49,7 +46,7 @@ func LoginWithCode(c *gin.Context) {
 		return
 	}
 
-	code, err := rdb.Get(context.Background(), login.Phone).Result()
+	code, err := global.Rdb.Get(context.Background(), login.Phone).Result()
 	if err != nil {
 		//utils.DebugF("phone code has expired")
 		utils.Failed(c, 400, "email code has expired", nil)
@@ -63,14 +60,14 @@ func LoginWithCode(c *gin.Context) {
 	}
 
 	var user model.User
-	if err := db.Model(&model.User{}).Where("phone = ?", login.Phone).First(&user).Error; err == gorm.ErrRecordNotFound {
+	if err := global.Db.Model(&model.User{}).Where("phone = ?", login.Phone).First(&user).Error; err == gorm.ErrRecordNotFound {
 		// register
 		user = model.User{
 			Phone:        login.Phone,
 			PasswordHash: "",
 		}
 
-		db.Model(&model.User{}).Create(&user)
+		global.Db.Model(&model.User{}).Create(&user)
 
 		// release token
 		token, err := verify.ReleaseToken(user.ID, false)
@@ -105,7 +102,7 @@ func LoginWithPwd(c *gin.Context) {
 	}
 
 	var user model.User
-	if err := db.Model(&model.User{}).Where("phone = ?", pLogin.Phone).First(&user).Error; err == gorm.ErrRecordNotFound {
+	if err := global.Db.Model(&model.User{}).Where("phone = ?", pLogin.Phone).First(&user).Error; err == gorm.ErrRecordNotFound {
 		utils.DebugF("user phone not found: %s", pLogin.Phone)
 		utils.Failed(c, 400, "This account has not been registered", nil)
 		return

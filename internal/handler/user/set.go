@@ -1,6 +1,7 @@
 package user
 
 import (
+	"HackDayBackend/global"
 	"HackDayBackend/internal/model"
 	"HackDayBackend/utils"
 
@@ -26,7 +27,7 @@ func UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	if err := db.Model(&model.User{}).Where("id = ?", uid).Update("passwordHash", hashPwd).Error; err != nil {
+	if err := global.Db.Model(&model.User{}).Where("id = ?", uid).Update("passwordHash", hashPwd).Error; err != nil {
 		utils.ErrorF("UpdatePassword db err: %s", err)
 		utils.Failed(c, 500, "server internal err", nil)
 		return
